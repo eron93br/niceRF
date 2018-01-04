@@ -1,5 +1,16 @@
-// register definition
+/*
+  ******************************************************************************
+  * @file    niceRF.h
+  * @author  Nice RF
+  * @version V1.1
+  * @date    04-January-2018
+  * @brief   This file contains all the functions prototypes for the niceRF firmware 
+  ******************************************************************************
+  * @attention
+  ******************************************************************************
+  */
 
+// REGISTERS DEFINITION
 #define LR_RegFifo 0x00
 #define LR_RegOpMode 0x01
 #define LR_RegBitrateMsb 0x02
@@ -50,3 +61,16 @@
 #define REG_LR_AGCTHRESH1 0x62
 #define REG_LR_AGCTHRESH2 0x63
 #define REG_LR_AGCTHRESH3 0x64
+
+
+// Function prototypes
+  
+byte SPIreadRegister(byte addr);
+byte SPIwriteRegister(byte addr,byte value);
+void SPIwriteBurst(unsigned char addr, unsigned char *ptr, unsigned char len);
+void SPIreadBurst(unsigned char addr, unsigned char *ptr, unsigned char len);
+void reset_sx1276(void);
+void Config_SX1276(void);
+void mode_tx(void);
+void init_rx(void);
+
