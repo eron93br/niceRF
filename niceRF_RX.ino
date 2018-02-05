@@ -9,7 +9,7 @@ by absolutelyautomation.com
 */
 // using SPI library:
 #include <SPI.h>
-#include <niceRF.c>
+#include <niceRF.h>
 
 // Digital pins definition
 #define MOSI 11
