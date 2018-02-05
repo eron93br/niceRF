@@ -1,4 +1,3 @@
-
 /*
 NiceRF LoRa1276 Module Arduino NANO Clone V3
 NANO LoRa1276
@@ -8,9 +7,9 @@ D13 SCK 4 SCK
 D10 7 NSS
 by absolutelyautomation.com
 */
+
 // using SPI library:
 #include <SPI.h>
-#include <niceRF.c>
 
 // Digital pins definition
 #define MOSI 11
@@ -23,6 +22,58 @@ by absolutelyautomation.com
 #define LED1 A4
 #define LED2 A5
 
+// register definition
+#define LR_RegFifo 0x00
+#define LR_RegOpMode 0x01
+#define LR_RegBitrateMsb 0x02
+#define LR_RegBitrateLsb 0x03
+#define LR_RegFdevMsb 0x04
+#define LR_RegFdMsb 0x05
+#define LR_RegFrMsb 0x06
+#define LR_RegFrMid 0x07
+#define LR_RegFrLsb 0x08
+#define LR_RegPaConfig 0x09
+#define LR_RegPaRamp 0x0A
+#define LR_RegOcp 0x0B
+#define LR_RegLna 0x0C
+#define LR_RegFifoAddrPtr 0x0D
+#define LR_RegFifoTxBaseAddr 0x0E
+#define LR_RegFifoRxBaseAddr 0x0F
+#define LR_RegFifoRxCurrentaddr 0x10
+#define LR_RegIrqFlagsMask 0x11
+#define LR_RegIrqFlags 0x12
+#define LR_RegRxNbBytes 0x13
+#define LR_RegRxHeaderCntValueMsb 0x14
+#define LR_RegRxHeaderCntValueLsb 0x15
+#define LR_RegRxPacketCntValueMsb 0x16
+#define LR_RegRxPacketCntValueLsb 0x17
+#define LR_RegModemStat 0x18
+#define LR_RegPktSnrValue 0x19
+#define LR_RegPktRssiValue 0x1A
+#define LR_RegRssiValue 0x1B
+#define LR_RegHopChannel 0x1C
+#define LR_RegModemConfig1 0x1D
+#define LR_RegModemConfig2 0x1E
+#define LR_RegSymbTimeoutLsb 0x1F
+#define LR_RegPreambleMsb 0x20
+#define LR_RegPreambleLsb 0x21
+#define LR_RegPayloadLength 0x22
+#define LR_RegMaxPayloadLength 0x23
+#define LR_RegHopPeriod 0x24
+#define LR_RegFifoRxByteAddr 0x25
+#define LR_RegModemConfig3 0x26
+#define REG_LR_DIOMAPPING1 0x40
+#define REG_LR_DIOMAPPING2 0x41
+#define REG_LR_VERSION 0x42
+#define REG_LR_PLLHOP 0x44
+#define REG_LR_TCXO 0x4B
+#define REG_LR_PADAC 0x4D
+#define REG_LR_FORMERTEMP 0x5B
+#define REG_LR_AGCREF 0x61
+#define REG_LR_AGCTHRESH1 0x62
+#define REG_LR_AGCTHRESH2 0x63
+#define REG_LR_AGCTHRESH3 0x64
+
 // payload length
 #define payload_length 7
 // tx packet
@@ -30,7 +81,9 @@ unsigned char txbuf[payload_length]={'t','e','s','t','i','n','g'};
 // rx packet
 unsigned char rxbuf[30];
 // Initialization
-void setup() {
+
+void setup()
+{
  byte temp = 0;
 
  // Initializing serial port, usefull for debuging
@@ -55,7 +108,6 @@ void setup() {
  digitalWrite(RXEN,LOW); // Disabling rx antenna
  digitalWrite(LED1,LOW);
  digitalWrite(LED2,LOW);
-
  /* Initializing SPI registers
  description of every SPCR register bits
  | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
@@ -66,13 +118,11 @@ void setup() {
  MSTR - Enable SPI master mode (logic 1), slave mode (logic 0)
  CPOL - Setup clock signal inactive in high (logic 1), inactive in low (logic 0)
  CPHA - Read data on Falling Clock Edge (logic 1), Rising edge (logic 0)
-
-  SPR1 y SPR0 - Setup SPI data rate: 00 Fastest (4MHz), 11 Slowest (250KHz)
+ SPR1 y SPR0 - Setup SPI data rate: 00 Fastest (4MHz), 11 Slowest (250KHz)
 
  // SPCR = 01010011
  //interupt disabled,spi enabled,most significant bit (msb) first,SPI master,clock inactive low,
  data fech rising clock edge, slowest data rate*/
- 
  SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR1)|(1<<SPR0);
  temp=SPSR; //Reading and discarding previous data
  temp=SPDR; //Reading and discarding previous data
@@ -130,7 +180,7 @@ byte SPIwriteRegister(byte addr,byte value) {
  };
  result = SPDR; // Discard first reading
 
- SPDR = value; // Sending byte
+  SPDR = value; // Sending byte
  while (!(SPSR & (1<<SPIF))) // Wait for transmission to finish
  {
  };
@@ -198,7 +248,7 @@ unsigned char result;
  ptr++;
  } 
 
-  //DEBUG DEBUG DEBUG
+ //DEBUG DEBUG DEBUG
  Serial.print("\n");
  // DEBUG DEBUG DEBUG
 
@@ -283,3 +333,4 @@ addr = SPIreadRegister(LR_RegFifoRxBaseAddr); // read RxBaseAddr
 SPIwriteRegister(LR_RegFifoAddrPtr,addr); // RxBaseAddr->FifoAddrPtr
 SPIwriteRegister(LR_RegOpMode,0x05); // rx mode continuous high frequency
 }
+
